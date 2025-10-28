@@ -67,6 +67,7 @@ int main(void)
 
   return(0);
 }
+
 /*****+------*-*-**-*-*---**----**---**---*-*-***--*************************
 *
 *  Function Information
@@ -84,6 +85,7 @@ int main(void)
 *  and saves the values in main.
 *
 ******+------*-*-**-*-*---**----**---**---*-*-***--************************/
+
 void input(int *day, int *month, int *year)
 {
   printf("Enter a date (month day year) -> ");
@@ -120,6 +122,7 @@ void input(int *day, int *month, int *year)
 *  date.
 *
 ******+-----*******---*---**----**---**---*-*-***--************************/
+
 void output(int year, int status, int numDays, int dayOfWeek, int dayOfYear, int season, int diffDay, int diffMonth, int diffYear)
 {
   printf("\nGiven Date Description\n");
@@ -194,9 +197,10 @@ void output(int year, int status, int numDays, int dayOfWeek, int dayOfYear, int
   }
   else
   {
-    printf("\nHomework due date (%d/%02d/%d): %d year, %d months, %d days ago\n", DUEMONTH, DUEDAY, DUEYEAR, diffYear, diffMonth, diffDay);
+    printf("\nHomework due date (%d/%02d/%d): %d years, %d months, %d days ago\n", DUEMONTH, DUEDAY, DUEYEAR, diffYear, diffMonth, diffDay);
   }
 }
+
 /*****+*-*-*-**----***----*-----*--*-**---*-*-***--*************************
 *
 *  Function Information
@@ -213,9 +217,11 @@ void output(int year, int status, int numDays, int dayOfWeek, int dayOfYear, int
 *  Function Description: check if the year inputted is a leap year
 *
 ******+*-*-*-**----***----*-----*--*-**---*-*-***--************************/
+
 int checkLeapYear(int year)
 {
-  int isLeapYear = 0;
+  int isLeapYear;
+  isLeapYear = 0;
 
   if((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
   {
@@ -224,6 +230,7 @@ int checkLeapYear(int year)
 
   return(isLeapYear);
 }
+
 /*****+*-*-*-**----***----*-----*--*-**---*-*-***--*************************
 *
 *  Function Information
@@ -240,6 +247,7 @@ int checkLeapYear(int year)
 *  Function Description:calculates the number of days in the month inputted
 *
 ******+*-*-*-**----***----*-----*--*-**---*-*-***--************************/
+
 int numberOfDaysInMonth(int status, int month)
 {
   int numberOfDays; //stores the number of days in the specific month
@@ -274,6 +282,7 @@ int numberOfDaysInMonth(int status, int month)
 
   return(numberOfDays);
 }
+
 /*****+*-*****-----***----*-----*--*-**---*-*-***--*************************
 *
 *  Function Information
@@ -290,6 +299,7 @@ int numberOfDaysInMonth(int status, int month)
 *  Function Description:calculates the day of the week based on the given date
 *
 ******+*-*****-----***----*-----*--*-**---*-*-***--************************/
+
 int calcDayOfWeek(int day, int month, int year)
 {
   int yearCentury; //year of the century
@@ -341,62 +351,62 @@ int calcDayOfWeek(int day, int month, int year)
 int calcDayOfYear(int day, int month, int status)
 {
 //switch case must have in
-int total_days;
+  int total_days;
 
-total_days = 0;
-if (month > 1)
-{
-  total_days += THIRTYONE;
-}
-if (month > 2)
-{
-  if (status)
+  total_days = 0;
+  if (month > 1)
   {
-    total_days += 29;
+    total_days += THIRTYONE;
   }
-  else
+  if (month > 2)
   {
-    total_days += 28;
+    if (status)
+    {
+      total_days += 29;
+    }
+    else
+    {
+      total_days += 28;
+    }
   }
-}
-if (month > 3)
-{
-  total_days += THIRTYONE;
-}
-if (month > 4)
-{
-  total_days += THIRTY;
-}
-if (month > 5)
-{
-  total_days += THIRTYONE;
-}
-if (month > 6)
-{
-  total_days += THIRTY;
-}
-if (month > 7)
-{
-  total_days += THIRTYONE;
-}
-if (month > 8)
-{
-  total_days += THIRTYONE;
-}
-if (month > 9)
-{
-  total_days += THIRTY;
-}
-if (month > 10)
-{
-  total_days += THIRTYONE;
-}
-if (month > 11)
-{
-  total_days += THIRTY;
-}
-total_days += day;
-return total_days;
+  if (month > 3)
+  {
+    total_days += THIRTYONE;
+  }
+  if (month > 4)
+  {
+    total_days += THIRTY;
+  }
+  if (month > 5)
+  {
+    total_days += THIRTYONE;
+  }
+  if (month > 6)
+  {
+    total_days += THIRTY;
+  }
+  if (month > 7)
+  {
+    total_days += THIRTYONE;
+  }
+  if (month > 8)
+  {
+    total_days += THIRTYONE;
+  }
+  if (month > 9)
+  {
+    total_days += THIRTY;
+  }
+  if (month > 10)
+  {
+    total_days += THIRTYONE;
+  }
+  if (month > 11)
+  {
+    total_days += THIRTY;
+  }
+  total_days += day;
+  return total_days;
 }
 /*****+*-*-*-**----***----*-----*--*-**---*-*-***--*************************
 *
@@ -480,7 +490,6 @@ void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_
   int tm; //temp month
   int td; //temp day
 
-
   y2 = DUEYEAR;  
   m2 = DUEMONTH; 
   d2 = DUEDAY;  
@@ -488,18 +497,23 @@ void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_
   m1 = month;    
   d1 = day;     
 
-
-  if ( (y1 > y2) ||
-       (y1 == y2 && m1 > m2) ||
-       (y1 == y2 && m1 == m2 && d1 > d2) ) {
+  if ( (y1 > y2) || (y1 == y2 && m1 > m2) || (y1 == y2 && m1 == m2 && d1 > d2) ) 
+  {
     // Swap so we always subtract smaller from larger
-    ty = y1; y1 = y2; y2 = ty;
-    tm = m1; m1 = m2; m2 = tm;
-    td = d1; d1 = d2; d2 = td;
+    ty = y1; 
+    y1 = y2; 
+    y2 = ty;
+    tm = m1;
+    m1 = m2; 
+    m2 = tm;
+    td = d1; 
+    d1 = d2; 
+    d2 = td;
   }
 
   // Borrow days if needed
-  if (d2 < d1) {
+  if (d2 < d1) 
+  {
     // borrow one month into d2
     m2 -= 1;
     if (m2 == 0) { m2 = 12; y2 -= 1; }
@@ -508,7 +522,8 @@ void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_
   }
 
   // Borrow months if needed
-  if (m2 < m1) {
+  if (m2 < m1) 
+  {
     y2 -= 1;
     m2 += 12;
   }
