@@ -1,18 +1,23 @@
 #include<stdio.h>
+#include<math.h>
+#include<stdlib.h>
 
 #define DUEDAY 3
 #define DUEMONTH 11
 #define DUEYEAR 2025
 
-#define THIRTYONE 31; //the number of days in month
-#define THIRTY 30; //the number of days in a month
-#define TWENTYNINE 29; //number of days in Feb for leap year
-#define TWENTYEIGHT 28; //number of days in Feb
+#define THIRTYONE 31 //the number of days in month
+#define THIRTY 30 //the number of days in a month
+#define TWENTYNINE 29 //number of days in Feb for leap year
+#define TWENTYEIGHT 28 //number of days in Feb
 
+void input(int *day, int *month, int *year);
 int checkLeapYear(int);
 int numberOfDaysInMonth(int, int);
 int calcDayOfWeek(int, int, int);
-void input(int *day, int *month, int *year);
+int calcDayOfYear(int day, int month, int status);
+int calcSeasonOfDate(int day, int month);
+void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_month, int* diff_year);
 void output(int year, int status, int numDays, int dayOfWeek, int dayOfYear, int season, int diffDay, int diffMonth, int diffYear);
 
 int main(void)
@@ -29,14 +34,13 @@ int main(void)
   int diffMonth;
   int diffYear;
 
+  input(&day, &month, &year);
   status = checkLeapYear(year);
   numDays = numberOfDaysInMonth(status, month);
   dayOfWeek = calcDayOfWeek(day, month, year);
   dayOfYear = calcDayOfYear(day,month,status);
   season = calcSeasonOfDate(day,month);
-  calcHomeworkDueDate(year,month,day,numDays,&diffDay,&diffMonth,&diffYear);
-
-  input(&day, &month, &year);
+  calcHomeworkDueDate(year,month,day,&diffDay,&diffMonth,&diffYear);
   output(year, status, numDays, dayOfWeek, dayOfYear, season, diffDay, diffMonth, diffYear);
 
   return(0);
@@ -101,11 +105,11 @@ void output(int year, int status, int numDays, int dayOfWeek, int dayOfYear, int
 
   if (status)
   {
-    printf("Year 2024 status: Leap Year\n");
+    printf("Year %d status: Leap Year\n",year);
   }
   else
   {
-    printf("Year 2024 status: Not a Leap Year\n");
+    printf("Year %d status: Not a Leap Year\n",year);
   }
 
   printf("Number of days in month: %d\n", numDays);
@@ -168,7 +172,7 @@ void output(int year, int status, int numDays, int dayOfWeek, int dayOfYear, int
   }
   else
   {
-    printf("\nHomework due date(%d/%02d/%d): %d year, %d months, %d days ago\n", DUEMONTH, DUEDAY, DUEYEAR, diffYear, diffMonth, diffDay);
+    printf("\nHomework due date (%d/%02d/%d): %d year, %d months, %d days ago\n", DUEMONTH, DUEDAY, DUEYEAR, diffYear, diffMonth, diffDay);
   }
 }
 /*****+*-*-*-**----***----*-----*--*-**---*-*-***--*************************
@@ -422,21 +426,17 @@ int calcSeasonOfDate(int day, int month)
 *  Function Description: check if the year inputted is a leap year
 *
 ******+*-*-*-**----***----*-----*--*-**---*-*-***--************************/
-void calcHomeworkDueDate(int year, int month, int day, int daysInMonth,
-                         int* diff_day, int* diff_month, int* diff_year)
+void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_month, int* diff_year)
 {
   // Target (due) and current (now)
   int y2 = DUEYEAR,  m2 = DUEMONTH, d2 = DUEDAY;  // due
   int y1 = year,     m1 = month,    d1 = day;     // current
   int y2Status;
 
-  // Determine sign: +1 if due >= current, -1 if overdue
-  int sign = 1;
   if ( (y1 > y2) ||
        (y1 == y2 && m1 > m2) ||
        (y1 == y2 && m1 == m2 && d1 > d2) ) {
-    // Swap so we always subtract smaller from larger, then apply sign
-    sign = -1;
+    // Swap so we always subtract smaller from larger
     int ty = y1; y1 = y2; y2 = ty;
     int tm = m1; m1 = m2; m2 = tm;
     int td = d1; d1 = d2; d2 = td;
@@ -462,7 +462,7 @@ void calcHomeworkDueDate(int year, int month, int day, int daysInMonth,
   int dd = d2 - d1;
 
   // Apply sign if overdue
-  *diff_year  = sign * dy;
-  *diff_month = sign * dm;
-  *diff_day   = sign * dd;
+  *diff_year  = abs(dy);
+  *diff_month = abs(dm);
+  *diff_day   = abs(dd);
 }                                                                                   
