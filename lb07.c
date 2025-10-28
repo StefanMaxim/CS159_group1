@@ -476,6 +476,9 @@ void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_
   int dy; //difference in years
   int dm; //difference in months
   int dd; //difference in days
+  int ty; //temp year
+  int tm; //temp month
+  int td; //temp day
 
 
   y2 = DUEYEAR;  
@@ -490,9 +493,9 @@ void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_
        (y1 == y2 && m1 > m2) ||
        (y1 == y2 && m1 == m2 && d1 > d2) ) {
     // Swap so we always subtract smaller from larger
-    int ty = y1; y1 = y2; y2 = ty;
-    int tm = m1; m1 = m2; m2 = tm;
-    int td = d1; d1 = d2; d2 = td;
+    ty = y1; y1 = y2; y2 = ty;
+    tm = m1; m1 = m2; m2 = tm;
+    td = d1; d1 = d2; d2 = td;
   }
 
   // Borrow days if needed
