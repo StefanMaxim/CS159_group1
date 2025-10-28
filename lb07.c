@@ -1,10 +1,31 @@
+/*****+**--*-*-****-****-*------***-**----*-*-***--*************************
+*
+*  Lab #:7
+*
+*  Academic Integrity Statement:
+*
+*  We have not used source code obtained from any other unauthorized source,
+*  either modified or unmodified. Neither have we provided access to our code
+*  to another. The effort we are submitting is our own original work. We have 
+*  not made use of any AI generated code in this solution. 
+*
+*  Program Description:
+*  Reads a calendar date (month day year) from the user, determines whether
+*  the year is a leap year, computes the number of days in the input month,
+*  calculates the day of the week (Monday=1 … Sunday=7), the day-of-year,
+*  and the astronomical season (Spring=1, Summer=2, Fall=3, Winter=4).
+*  It then computes the calendar difference in years, months, and days
+*  between the input date and the fixed homework due date (DUEMONTH/DUEDAY/DUEYEAR),
+*  and prints all of these results in a formatted summary.
+*
+******+**--*-*-****-****-*------***-**----*-*-***--************************/
 #include<stdio.h>
 #include<math.h>
 #include<stdlib.h>
 
-#define DUEDAY 3
-#define DUEMONTH 11
-#define DUEYEAR 2025
+#define DUEDAY 3 //the day in which the assignment is due
+#define DUEMONTH 11 //the month in which the assignment is due
+#define DUEYEAR 2025 //the year in which the assignment is due
 #define THIRTYONE 31 //the number of days in month
 #define THIRTY 30 //the number of days in a month
 #define TWENTYNINE 29 //number of days in Feb for leap year
@@ -21,25 +42,27 @@ void output(int year, int status, int numDays, int dayOfWeek, int dayOfYear, int
 
 int main(void)
 {
-  int day;
-  int month;
-  int year;
-  int status;
-  int numDays;
-  int dayOfWeek;
-  int dayOfYear;
-  int season;
-  int diffDay;
-  int diffMonth;
-  int diffYear;
+  //Local Declarations
+  int day;        // input: day of month (1–31)
+  int month;      // input: month number (1–12)
+  int year;       // input: Gregorian year
+  int status;     // derived: 1 if leap year, 0 otherwise
+  int numDays;    // derived: number of days in the given month for the given year
+  int dayOfWeek;  // derived: weekday for the input date (Monday=1 … Sunday=7)
+  int dayOfYear;  // derived: ordinal day within the year (1–365/366)
+  int season;     // derived: season code (1=Spring, 2=Summer, 3=Fall, 4=Winter)
+  int diffDay;    // derived: |day| component of date difference to due date
+  int diffMonth;  // derived: |month| component of date difference to due date
+  int diffYear;   // derived: |year| component of date difference to due date
 
+  //Executable Statments
   input(&day, &month, &year);
   status = checkLeapYear(year);
   numDays = numberOfDaysInMonth(status, month);
   dayOfWeek = calcDayOfWeek(day, month, year);
-  dayOfYear = calcDayOfYear(day,month,status);
-  season = calcSeasonOfDate(day,month);
-  calcHomeworkDueDate(year,month,day,&diffDay,&diffMonth,&diffYear);
+  dayOfYear = calcDayOfYear(day, month, status);
+  season = calcSeasonOfDate(day, month);
+  calcHomeworkDueDate(year, month, day, &diffDay, &diffMonth, &diffYear);
   output(year, status, numDays, dayOfWeek, dayOfYear, season, diffDay, diffMonth, diffYear);
 
   return(0);
@@ -229,21 +252,24 @@ int numberOfDaysInMonth(int status, int month)
     case 7:
     case 8:
     case 10:
-    case 12: numberOfDays = THIRTYONE;
-             break;
+    case 12: 
+      numberOfDays = THIRTYONE;
+      break;
     case 4:
     case 6:
     case 9:
-    case 11: numberOfDays = THIRTY;
-             break;
-    default: if(status == 1)
-            {
-              numberOfDays = TWENTYNINE;
-            }
-            else
-            {
-              numberOfDays = TWENTYEIGHT;
-            }
+    case 11: 
+      numberOfDays = THIRTY;
+      break;
+    default: 
+      if(status == 1)
+        {
+          numberOfDays = TWENTYNINE;
+        }
+        else
+        {
+          numberOfDays = TWENTYEIGHT;
+        }
   }
 
   return(numberOfDays);
@@ -298,16 +324,18 @@ int calcDayOfWeek(int day, int month, int year)
 *
 *  Function Information
 *
-*  Name of Function:checkLeapYear
+*  Name of Function: calcDayOfYear
 *
-*  Function Return Type:int
+*  Function Return Type: int
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.int year, stores the year that user inputs
-*    2.
-*    3.
+*    1. int day   - Day of the month (1–31).
+*    2. int month - Month number (1–12).
+*    3. int status- Leap-year flag for the given year (1 = leap, 0 = not).
 *
-*  Function Description: check if the year inputted is a leap year
+*  Function Description: Computes the 1-based day-of-year for the given date
+*  by summing the lengths of all full months prior to `month` and then adding
+*  `day`. February is treated as 29 days when `status == 1`, else 28 days.
 *
 ******+*-*-*-**----***----*-----*--*-**---*-*-***--************************/
 int calcDayOfYear(int day, int month, int status)
@@ -324,11 +352,11 @@ if (month > 2)
 {
   if (status)
   {
-    total_days +=29;
+    total_days += 29;
   }
   else
   {
-    total_days +=28;
+    total_days += 28;
   }
 }
 if (month > 3)
@@ -374,16 +402,18 @@ return total_days;
 *
 *  Function Information
 *
-*  Name of Function:checkLeapYear
+*  Name of Function: calcSeasonOfDate
 *
-*  Function Return Type:int
+*  Function Return Type: int
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.int year, stores the year that user inputs
-*    2.
-*    3.
+*    1. int day   - Day of the month (1–31).
+*    2. int month - Month number (1–12).
 *
-*  Function Description: check if the year inputted is a leap year
+*  Function Description: Determines the astronomical season of the given date
+*  using these bounds: Spring (Mar 21–Jun 20) → 1, Summer (Jun 21–Sep 20) → 2,
+*  Fall (Sep 21–Dec 20) → 3, Winter (Dec 21–Mar 20) → 4.
+*  Returns the season code as an integer 1–4.
 *
 ******+*-*-*-**----***----*-----*--*-**---*-*-***--************************/
 int calcSeasonOfDate(int day, int month)
@@ -413,24 +443,48 @@ int calcSeasonOfDate(int day, int month)
 *
 *  Function Information
 *
-*  Name of Function:checkLeapYear
+*  Name of Function: calcHomeworkDueDate
 *
-*  Function Return Type:int
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.int year, stores the year that user inputs
-*    2.
-*    3.
+*    1. int year      - Current date year.
+*    2. int month     - Current date month (1–12).
+*    3. int day       - Current date day (1–31).
+*    4. int *diff_day   - OUT: absolute day component of difference.
+*    5. int *diff_month - OUT: absolute month component of difference.
+*    6. int *diff_year  - OUT: absolute year component of difference.
 *
-*  Function Description: check if the year inputted is a leap year
+*  Function Description: Computes the calendar difference between the current
+*  date (year/month/day) and the fixed due date (DUEMONTH/DUEDAY/DUEYEAR).
+*  If needed, swaps dates so subtraction is well-defined, then normalizes by
+*  borrowing days from the previous month and months from the previous year.
+*  Writes the absolute values of the resulting (years, months, days) into the
+*  provided output pointers.
 *
 ******+*-*-*-**----***----*-----*--*-**---*-*-***--************************/
 void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_month, int* diff_year)
 {
   // Target (due) and current (now)
-  int y2 = DUEYEAR,  m2 = DUEMONTH, d2 = DUEDAY;  // due
-  int y1 = year,     m1 = month,    d1 = day;     // current
-  int y2Status;
+  int y2; //the years it is due
+  int m2; //the month it is due
+  int d2; // the day it is due
+  int y1; //current year 
+  int m1; //current month
+  int d1; // current year
+  int y2Status; //status of the year is it due
+  int dy; //difference in years
+  int dm; //difference in months
+  int dd; //difference in days
+
+
+  y2 = DUEYEAR;  
+  m2 = DUEMONTH; 
+  d2 = DUEDAY;  
+  y1 = year;    
+  m1 = month;    
+  d1 = day;     
+
 
   if ( (y1 > y2) ||
        (y1 == y2 && m1 > m2) ||
@@ -456,9 +510,9 @@ void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_
     m2 += 12;
   }
 
-  int dy = y2 - y1;
-  int dm = m2 - m1;
-  int dd = d2 - d1;
+  dy = y2 - y1;
+  dm = m2 - m1;
+  dd = d2 - d1;
 
   // Apply sign if overdue
   *diff_year  = abs(dy);
