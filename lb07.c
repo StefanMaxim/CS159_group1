@@ -46,11 +46,15 @@ int main(void)
   int day;        // input: day of month (1–31)
   int month;      // input: month number (1–12)
   int year;       // input: Gregorian year
+
   int status;     // derived: 1 if leap year, 0 otherwise
+
   int numDays;    // derived: number of days in the given month for the given year
+
   int dayOfWeek;  // derived: weekday for the input date (Monday=1 … Sunday=7)
   int dayOfYear;  // derived: ordinal day within the year (1–365/366)
   int season;     // derived: season code (1=Spring, 2=Summer, 3=Fall, 4=Winter)
+
   int diffDay;    // derived: |day| component of date difference to due date
   int diffMonth;  // derived: |month| component of date difference to due date
   int diffYear;   // derived: |year| component of date difference to due date
@@ -65,7 +69,7 @@ int main(void)
   calcHomeworkDueDate(year, month, day, &diffDay, &diffMonth, &diffYear);
   output(year, status, numDays, dayOfWeek, dayOfYear, season, diffDay, diffMonth, diffYear);
 
-  return(0);
+  return 0;
 }
 
 /*****+------*-*-**-*-*---**----**---**---*-*-***--*************************
@@ -221,6 +225,7 @@ void output(int year, int status, int numDays, int dayOfWeek, int dayOfYear, int
 int checkLeapYear(int year)
 {
   int isLeapYear; //integer representing the boolean of whether or not it is a leap year
+
   isLeapYear = 0;
 
   if((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
@@ -304,8 +309,10 @@ int calcDayOfWeek(int day, int month, int year)
 {
   int yearCentury;       // K: year of the century
   int zeroBasedCentury;  // J: zero-based century
+
   int y;                 // adjusted year for Jan/Feb
   int m;                 // adjusted month for Jan/Feb (Mar=3,...,Jan=13, Feb=14)
+
   int dayOfWeek;         // weekday (Monday=1..Sunday=7)
   int h;                 //zeller calculation number
 
@@ -322,7 +329,9 @@ int calcDayOfWeek(int day, int month, int year)
   }
 
   yearCentury = y % 100;         /* K */
+
   zeroBasedCentury = y / 100;    /* J */
+
 
   /* Zeller (Gregorian): h = (q + 13(m+1)/5 + K + K/4 + J/4 + 5J) % 7, 0=Saturday */
   h = (day + (13 * (m + 1)) / 5 + yearCentury + (yearCentury / 4) + (zeroBasedCentury / 4) + 5 * zeroBasedCentury) % 7;
@@ -480,13 +489,17 @@ void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_
   int y2; //the years it is due
   int m2; //the month it is due
   int d2; // the day it is due
+
   int y1; //current year 
   int m1; //current month
   int d1; // current year
+
   int y2Status; //status of the year is it due
+
   int dy; //difference in years
   int dm; //difference in months
   int dd; //difference in days
+
   int ty; //temp year
   int tm; //temp month
   int td; //temp day
@@ -504,9 +517,11 @@ void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_
     ty = y1; 
     y1 = y2; 
     y2 = ty;
+
     tm = m1;
     m1 = m2; 
     m2 = tm;
+
     td = d1; 
     d1 = d2; 
     d2 = td;
@@ -539,6 +554,8 @@ void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_
 
   // Apply sign if overdue
   *diff_year  = abs(dy);
+
   *diff_month = abs(dm);
+
   *diff_day   = abs(dd);
 }                                                                                   
