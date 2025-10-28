@@ -5,7 +5,6 @@
 #define DUEDAY 3
 #define DUEMONTH 11
 #define DUEYEAR 2025
-
 #define THIRTYONE 31 //the number of days in month
 #define THIRTY 30 //the number of days in a month
 #define TWENTYNINE 29 //number of days in Feb for leap year
