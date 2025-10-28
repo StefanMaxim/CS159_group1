@@ -220,7 +220,7 @@ void output(int year, int status, int numDays, int dayOfWeek, int dayOfYear, int
 
 int checkLeapYear(int year)
 {
-  int isLeapYear;
+  int isLeapYear; //integer representing the boolean of whether or not it is a leap year
   isLeapYear = 0;
 
   if((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
@@ -302,33 +302,34 @@ int numberOfDaysInMonth(int status, int month)
 
 int calcDayOfWeek(int day, int month, int year)
 {
-  int yearCentury; //year of the century
-  int zeroBasedCentury; //the zero based century
-  int adjYear; //the adjusted year, knowing Jan and Feb are the 13, and 14 month of the previous year
-  int dayOfWeek; //stores the day of the week in numeric format;
+  int yearCentury;       // K: year of the century
+  int zeroBasedCentury;  // J: zero-based century
+  int y;                 // adjusted year for Jan/Feb
+  int m;                 // adjusted month for Jan/Feb (Mar=3,...,Jan=13, Feb=14)
+  int dayOfWeek;         // weekday (Monday=1..Sunday=7)
+  int h;                 //zeller calculation number
 
-  if(month == 1)
+  /* Adjust Jan/Feb to be months 13/14 of the previous year */
+  if (month == 1 || month == 2) 
   {
-    adjYear = year - 1;
-    month = 13;
-  }
-  else if(month == 2)
+    y = year - 1;
+    m = month + 12;
+  } 
+  else 
   {
-    adjYear = year - 2;
-    month = 14;
-  }
-  else
-  {
-    adjYear  = year;
+    y = year;
+    m = month;
   }
 
-  yearCentury = adjYear % 100;
-  zeroBasedCentury = adjYear / 100;
-  dayOfWeek = (day + (13 * (month + 1) / 5) + yearCentury + (yearCentury / 4) + (zeroBasedCentury / 4) - (2 * zeroBasedCentury)) % 7;
-  dayOfWeek = (dayOfWeek + 5) % 7 + 1;
+  yearCentury = y % 100;         /* K */
+  zeroBasedCentury = y / 100;    /* J */
 
-  return(dayOfWeek);
+  /* Zeller (Gregorian): h = (q + 13(m+1)/5 + K + K/4 + J/4 + 5J) % 7, 0=Saturday */
+  h = (day + (13 * (m + 1)) / 5 + yearCentury + (yearCentury / 4) + (zeroBasedCentury / 4) + 5 * zeroBasedCentury) % 7;
 
+  /* Map 0=Sat,1=Sun,2=Mon,... to Monday=1..Sunday=7 */
+  dayOfWeek = ((h + 5) % 7) + 1;
+  return dayOfWeek;
 }
 /*****+*-*-*-**----***----*-----*--*-**---*-*-***--*************************
 *
@@ -516,7 +517,11 @@ void calcHomeworkDueDate(int year, int month, int day, int* diff_day, int* diff_
   {
     // borrow one month into d2
     m2 -= 1;
-    if (m2 == 0) { m2 = 12; y2 -= 1; }
+    if (m2 == 0) 
+    {
+      m2 = 12; 
+      y2 -= 1; 
+    }
     y2Status = checkLeapYear(y2);
     d2 += numberOfDaysInMonth(y2Status,m2);
   }
