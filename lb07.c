@@ -332,7 +332,6 @@ int calcDayOfWeek(int day, int month, int year)
 
   zeroBasedCentury = y / 100;    /* J */
 
-
   /* Zeller (Gregorian): h = (q + 13(m+1)/5 + K + K/4 + J/4 + 5J) % 7, 0=Saturday */
   h = (day + (13 * (m + 1)) / 5 + yearCentury + (yearCentury / 4) + (zeroBasedCentury / 4) + 5 * zeroBasedCentury) % 7;
 
@@ -361,7 +360,7 @@ int calcDayOfWeek(int day, int month, int year)
 int calcDayOfYear(int day, int month, int status)
 {
 //switch case must have in
-  int total_days;
+  int total_days; // the total days that year
 
   total_days = 0;
   if (month > 1)
@@ -438,7 +437,7 @@ int calcDayOfYear(int day, int month, int status)
 ******+*-*-*-**----***----*-----*--*-**---*-*-***--************************/
 int calcSeasonOfDate(int day, int month)
 {
-  int season;
+  int season; //the season where 1 is spring and 4 is winter
 
   if ((month == 3 && day >= 21) || (month == 4) || (month == 5) || (month == 6 && day <= 20))
   {
