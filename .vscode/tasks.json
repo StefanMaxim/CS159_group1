@@ -1,0 +1,45 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "C/C++: gcc build active file",
+			"command": "/usr/bin/gcc",
+			"args": [
+				"-std=c89", //changes which c version is used
+				"-fdiagnostics-color=always",
+				"-g",
+				"-Wall",
+				"-Wextra",
+				"${file}",
+				"-o",
+				"${fileDirname}/${fileBasenameNoExtension}"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "compiler: /usr/bin/gcc"
+		}
+	]
+}
+
+// for copypasting into vim, set space to off :set paste, then when done :set nopaste
+//:retab forces all tabs to reindent to spaces based on what tabindent is set to 
+// use set paste expandtab to expandtab
+//set tabstop? echos value
+//usercode snippet for hhw and hlb
+
+//Basically, VIM will automatically convert tabs to spaces.
+//to makes sure it doesn't do that, use :set noexpandtab
+//to convert spaces to tabs, use :retab!
+//to convert tabs to spaces, use :set expandtab then :retab
+
+//When copypasting, use :set paste expandtab
+//then when done :set nopaste

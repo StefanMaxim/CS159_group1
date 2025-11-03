@@ -1,6 +1,3 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
 /*****+*--****-****-**-*-*------**--**----*-*-***--*************************
 *
 *  Homework #:
@@ -18,6 +15,9 @@
 *  the value with the most 1s, the value with the fewest 1s, the corresponding 
 *  1-bit counts, and how many generated values have an even vs. odd number of 1-bits.
 ******+*--****-****-**-*-*------**--**----*-*-***--************************/
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
 
 //Global Declarations
 void input(int* seedValue, int* numValues, int* min, int* max);
@@ -28,7 +28,6 @@ int convertToBinary(int num);
 void generateStatistics(int number, int binaryNum, int* numWithMostOnes, int* numWithFewestOnes, int* mostOnes, int* fewestOnes, int* numEvenOnes, int* numOddOnes);
 void updateStatistics(int number, int binaryNum, int* numWithMostOnes, int* numWithFewestOnes, int* mostOnes,int* fewestOnes, int* numEvenOnes, int* numOddOnes);
 int countOnes(int binaryNum);
-
 
 int main()
 {
@@ -82,9 +81,8 @@ void calculateStatistics(int seedValue, int numValues, int min, int max, int* nu
   int number; //the individual number being generated
   int binaryNum; //the number converted to binary
 
-
   srand(seedValue);
-  for (i=0;i<numValues;i++)
+  for (i = 0; i < numValues; i++)
   {
     number = generateNum(min,max);
     binaryNum = convertToBinary(number);
@@ -122,7 +120,6 @@ int generateNum(int min, int max)
 {
   return (rand() % (max - min + 1)) + min;
 }
-
 
 /*****+**--***-****-**-*-*------**--**----*-*-***--*************************
 *
@@ -188,7 +185,6 @@ void generateStatistics(int number, int binaryNum, int* numWithMostOnes, int* nu
 {
   int numOnes; //the number of ones in the number;
   
-
   numOnes = countOnes(binaryNum); 
   *numWithMostOnes = number;
   *numWithFewestOnes = number;
@@ -256,7 +252,6 @@ void updateStatistics(int number, int binaryNum, int* numWithMostOnes, int* numW
 
 }
 
-
 /*****+**--***-****-**-*-*------**--**----*-*-***--*************************
 *
 *  Function Information
@@ -282,7 +277,7 @@ int countOnes(int binaryNum)
   numOnes = 0;
   while (binaryNum > 0)
   {
-    digit = binaryNum% 10;
+    digit = binaryNum % 10;
     if (digit == 1)
     {
       numOnes++;
@@ -351,7 +346,7 @@ void input(int* seedValue, int* numValues, int* min, int* max)
 
   do
   {
-    printf("Enter maximum random value between 300 exclusive and 999 inclusive -> ");
+    printf("Enter maximum random value between %d exclusive and 999 inclusive -> ",tempMin);
     scanf("%d",&tempMax);
     if (tempMax <= tempMin || tempMax > 999)
     {
