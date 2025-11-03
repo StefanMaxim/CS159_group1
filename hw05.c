@@ -12,8 +12,11 @@
 *  to another. The effort I am submitting is my own original work. I have not 
 *  made use of any AI generated code in this solution. 
 *
-*  Program Description:
-*
+*  Program Description: This program generates a user-specified number of 
+*  pseudo-random integers within an input range, converts each to its binary 
+*  representation, and counts the number of 1-bits. It tracks and reports: 
+*  the value with the most 1s, the value with the fewest 1s, the corresponding 
+*  1-bit counts, and how many generated values have an even vs. odd number of 1-bits.
 ******+*--****-****-**-*-*------**--**----*-*-***--************************/
 
 //Global Declarations
@@ -50,16 +53,27 @@ int main()
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: calculateStatistics
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int seedValue             : RNG seed used for reproducibility
+*    2. int numValues             : how many random values to generate
+*    3. int min                   : inclusive lower bound for random values
+*    4. int max                   : inclusive upper bound for random values
+*    5. int* numWithMostOnes      : out-param; value having the most 1-bits
+*    6. int* numWithFewestOnes    : out-param; value having the fewest 1-bits
+*    7. int* mostOnes             : out-param; max 1-bit count observed
+*    8. int* fewestOnes           : out-param; min 1-bit count observed
+*    9. int* numEvenOnes          : out-param; count of values with even 1-bits
+*   10. int* numOddOnes           : out-param; count of values with odd 1-bits
 *
 *  Function Description:
+*    Seeds the RNG and iterates numValues times. Each iteration generates a
+*    random integer in [min, max], converts it to a decimal-encoded binary
+*    representation, and either initializes or updates tracking statistics
+*    for max/min counts of 1-bits and parity (even/odd) tallies.
 *
 ******+**--***-****-**-*-*------**--**----*-*-***--************************/
 void calculateStatistics(int seedValue, int numValues, int min, int max, int* numWithMostOnes, int* numWithFewestOnes, int* mostOnes,int* fewestOnes, int* numEvenOnes, int* numOddOnes)
@@ -90,16 +104,18 @@ void calculateStatistics(int seedValue, int numValues, int min, int max, int* nu
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: generateNum
 *
-*  Function Return Type:
+*  Function Return Type: int
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int min : inclusive lower bound
+*    2. int max : inclusive upper bound
 *
 *  Function Description:
+*    Returns a uniformly distributed pseudo-random integer in the closed
+*    interval [min, max]. Assumes 0 <= min <= max and that max - min
+*    fits within int range.
 *
 ******+**--***-****-**-*-*------**--**----*-*-***--************************/
 int generateNum(int min, int max)
@@ -107,20 +123,23 @@ int generateNum(int min, int max)
   return (rand() % (max - min + 1)) + min;
 }
 
+
 /*****+**--***-****-**-*-*------**--**----*-*-***--*************************
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: convertToBinary
 *
-*  Function Return Type:
+*  Function Return Type: int
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int num : non-negative integer to convert
 *
 *  Function Description:
+*    Converts num to a decimal-encoded binary representation (e.g., 13 -> 1101)
+*    by repeatedly taking num % 2 and building the result with powers of 10.
+*    This representation is used later to count 1-digits conveniently.
+*    Returns 0 when num == 0.
 *
 ******+**--***-****-**-*-*------**--**----*-*-***--************************/
 int convertToBinary(int num)
@@ -145,16 +164,24 @@ int convertToBinary(int num)
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: generateStatistics
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int number               : first generated value
+*    2. int binaryNum            : decimal-encoded binary digits of number
+*    3. int* numWithMostOnes     : out-param initialized to number
+*    4. int* numWithFewestOnes   : out-param initialized to number
+*    5. int* mostOnes            : out-param initialized to this number's 1-bit count
+*    6. int* fewestOnes          : out-param initialized to this number's 1-bit count
+*    7. int* numEvenOnes         : out-param initialized to 1 if count is even, else 0
+*    8. int* numOddOnes          : out-param initialized to 1 if count is odd,  else 0
 *
 *  Function Description:
+*    Handles the very first sample by establishing baseline statistics:
+*    both the "most" and "fewest" records are set to this number and its
+*    1-bit count, and parity tallies are initialized based on that count.
 *
 ******+**--***-****-**-*-*------**--**----*-*-***--************************/
 void generateStatistics(int number, int binaryNum, int* numWithMostOnes, int* numWithFewestOnes, int* mostOnes,int* fewestOnes, int* numEvenOnes, int* numOddOnes)
@@ -183,16 +210,24 @@ void generateStatistics(int number, int binaryNum, int* numWithMostOnes, int* nu
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: updateStatistics
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int number               : newly generated value
+*    2. int binaryNum            : decimal-encoded binary digits of number
+*    3. int* numWithMostOnes     : updated if current 1-bit count exceeds max
+*    4. int* numWithFewestOnes   : updated if current 1-bit count is a new min
+*    5. int* mostOnes            : maximum 1-bit count seen so far
+*    6. int* fewestOnes          : minimum 1-bit count seen so far
+*    7. int* numEvenOnes         : incremented if current count is even
+*    8. int* numOddOnes          : incremented if current count is odd
 *
 *  Function Description:
+*    Incorporates one additional sample into the running statistics. Compares
+*    the new 1-bit count to current extrema, updates the associated number
+*    when a new max/min is found, and increments the even/odd tally.
 *
 ******+**--***-****-**-*-*------**--**----*-*-***--************************/
 void updateStatistics(int number, int binaryNum, int* numWithMostOnes, int* numWithFewestOnes, int* mostOnes,int* fewestOnes, int* numEvenOnes, int* numOddOnes)
@@ -221,20 +256,22 @@ void updateStatistics(int number, int binaryNum, int* numWithMostOnes, int* numW
 
 }
 
+
 /*****+**--***-****-**-*-*------**--**----*-*-***--*************************
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: countOnes
 *
-*  Function Return Type:
+*  Function Return Type: int
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int binaryNum : decimal-encoded binary digits (e.g., 1101)
 *
 *  Function Description:
+*    Counts how many digits equal 1 in the decimal-encoded binary value.
+*    Iteratively strips the last digit with % 10 and increments a counter
+*    when that digit is 1. Returns the total number of 1-bits.
 *
 ******+**--***-****-**-*-*------**--**----*-*-***--************************/
 int countOnes(int binaryNum)
@@ -259,16 +296,20 @@ int countOnes(int binaryNum)
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: input
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int* seedValue : out-param; validated non-negative RNG seed
+*    2. int* numValues : out-param; validated count in [10, 100]
+*    3. int* min       : out-param; validated minimum in [0, 999]
+*    4. int* max       : out-param; validated maximum in (min, 999]
 *
 *  Function Description:
+*    Prompts for and validates all user inputs according to the assignment
+*    constraints. Re-prompts on invalid entries. On success, writes results
+*    to the provided pointers.
 *
 ******+**--***-****-**-*-*------**--**----*-*-***--************************/
 void input(int* seedValue, int* numValues, int* min, int* max)
@@ -328,16 +369,22 @@ void input(int* seedValue, int* numValues, int* min, int* max)
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: output
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int mostOnes         : maximum 1-bit count observed
+*    2. int fewestOnes       : minimum 1-bit count observed
+*    3. int numWithMostOnes  : value that achieved mostOnes
+*    4. int numWithFewestOnes: value that achieved fewestOnes
+*    5. int numEvenOnes      : how many values had an even number of 1-bits
+*    6. int numOddOnes       : how many values had an odd number of 1-bits
 *
 *  Function Description:
+*    Prints a formatted summary report of the computed statistics: the values
+*    that achieved the maximum and minimum 1-bit counts (and those counts),
+*    plus tallies for even and odd 1-bit occurrences among all generated values.
 *
 ******+**--***-****-**-*-*------**--**----*-*-***--************************/
 void output(int mostOnes, int fewestOnes, int numWithMostOnes, int numWithFewestOnes, int numEvenOnes, int numOddOnes)
