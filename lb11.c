@@ -289,26 +289,28 @@ void sortArrays(int* temp_arr, int* hum_arr, double* dew_arr, int sortOption)
 void insertionSort(int* primaryArr, int* secondaryArr, double* tertiaryArr)
 {
   int i; // outer index
-  int j; //traversal for insertion index
-  int key; //the value being looked at
-  int fakeKey1; //the value to be moved in the secondary array
-  double fakeKey2; // the value to be moved in the tertiary array
+  int j; // traversal for insertion index
+  int key; // primary key value
+  int fakeKey1; // secondary key value
+  double fakeKey2; // tertiary value
 
-  for(i = 1; i < SIZE; i++)
+  for (i = 1; i < SIZE; i++)
   {
     key = primaryArr[i];
     fakeKey1 = secondaryArr[i];
     fakeKey2 = tertiaryArr[i];
     j = i - 1;
-    while(j >= 0 && primaryArr[j] > key)
+
+    while (j >= 0 && (primaryArr[j] > key || (primaryArr[j] == key && secondaryArr[j] > fakeKey1)))
     {
-      primaryArr[j + 1] = primaryArr[j];
+      primaryArr[j + 1]  = primaryArr[j];
       secondaryArr[j + 1] = secondaryArr[j];
       tertiaryArr[j + 1] = tertiaryArr[j];
       j--;
     }
+
     j++;
-    primaryArr[j] = key;
+    primaryArr[j]  = key;
     secondaryArr[j] = fakeKey1;
     tertiaryArr[j] = fakeKey2;
   }
@@ -333,26 +335,28 @@ void insertionSort(int* primaryArr, int* secondaryArr, double* tertiaryArr)
 void insertionSort2(double* primaryArr, int* secondaryArr, int* tertiaryArr)
 {
   int i; // outer index
-  int j; //traversal for insertion index
-  double key; //the value being looked at
-  int fakeKey1; //the value to be moved in the secondary array
-  int fakeKey2; // the value to be moved in the tertiary array
+  int j; // traversal for insertion index
+  double key; // primary key value
+  int fakeKey1; // secondary key value
+  int fakeKey2; // tertiary value
 
-  for(i = 1; i < SIZE; i++)
+  for (i = 1; i < SIZE; i++)
   {
     key = primaryArr[i];
     fakeKey1 = secondaryArr[i];
     fakeKey2 = tertiaryArr[i];
     j = i - 1;
-    while(j >= 0 && primaryArr[j] > key)
+
+    while (j >= 0 && (primaryArr[j] > key || (primaryArr[j] == key && secondaryArr[j] > fakeKey1)))
     {
-      primaryArr[j + 1] = primaryArr[j];
+      primaryArr[j + 1]  = primaryArr[j];
       secondaryArr[j + 1] = secondaryArr[j];
       tertiaryArr[j + 1] = tertiaryArr[j];
       j--;
     }
+
     j++;
-    primaryArr[j] = key;
+    primaryArr[j]  = key;
     secondaryArr[j] = fakeKey1;
     tertiaryArr[j] = fakeKey2;
   }
