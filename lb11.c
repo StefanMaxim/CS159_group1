@@ -1,6 +1,6 @@
 /*****+**--***-****-****-*--*-*--**--**-*---*-***--*************************
 *
-*  Lab #:
+*  Lab #: 11
 *
 *  Academic Integrity Statement:
 *
@@ -10,7 +10,10 @@
 *  not made use of any AI generated code in this solution.
 *
 *  Program Description:
-
+*    Generates random temperature, humidity, and dew point data, sorts the
+*    values according to a user-selected criterion, and displays a specified
+*    index range of the data in a formatted table.
+*
 *
 *****+**--***-****-****-*--*-*--**--**-*---*-***--************************/
 
@@ -68,16 +71,18 @@ int main()
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: getSeed
 *
-*  Function Return Type:
+*  Function Return Type: int
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. None - this function does not take any parameters.
+*    2. N/A
+*    3. N/A
 *
 *  Function Description:
+*    Prompts the user for a positive integer seed value and validates the
+*    input. Repeats until a valid seed is entered, then returns the seed.
 *
 ******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
 int getSeed(void)
@@ -102,16 +107,18 @@ int getSeed(void)
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: getSortOption
 *
-*  Function Return Type:
+*  Function Return Type: int
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. None - this function does not take any parameters.
+*    2. N/A
+*    3. N/A
 *
 *  Function Description:
+*    Prompts the user for the sorting option (1=temperature, 2=humidity,
+*    3=dew point), validates that the choice is in range, and returns it.
 *
 ******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
 int getSortOption(void)
@@ -136,16 +143,19 @@ int getSortOption(void)
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: getIndices
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int *mindex - pointer to store the minimum index to display.
+*    2. int *maxdex - pointer to store the maximum index to display.
+*    3. N/A
 *
 *  Function Description:
+*    Prompts the user for minimum and maximum index values to display,
+*    validating that they are within the valid array range and that the
+*    maximum is not less than the minimum. Stores results via pointers.
 *
 ******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
 void getIndices(int* mindex, int* maxdex)
@@ -203,16 +213,20 @@ void getIndices(int* mindex, int* maxdex)
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: makeArray
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int *temp_arr - array to store generated temperature values (F).
+*    2. int *hum_arr  - array to store generated humidity values (%).
+*    3. double *dew_arr - array to store computed dew point values (F).
 *
 *  Function Description:
+*    Uses the provided random seed to generate SIZE temperature and humidity
+*    values within the specified range. Converts temperatures to Celsius,
+*    computes the dew point in Celsius using humidity, converts the dew point
+*    back to Fahrenheit, and stores all three values in parallel arrays.
 *
 ******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
 void makeArray(int* temp_arr, int* hum_arr, double* dew_arr, int seed)
@@ -242,16 +256,19 @@ void makeArray(int* temp_arr, int* hum_arr, double* dew_arr, int seed)
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: sortArrays
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int *temp_arr - array of temperature values to be sorted with others.
+*    2. int *hum_arr  - array of humidity values linked to temperatures.
+*    3. double *dew_arr - array of dew point values linked to temperatures.
 *
 *  Function Description:
+*    Sorts the three parallel arrays based on the user-selected option:
+*    by temperature, humidity, or dew point. Calls the appropriate
+*    insertion sort routine to keep all three arrays synchronized.
 *
 ******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
 void sortArrays(int* temp_arr, int* hum_arr, double* dew_arr, int sortOption)
@@ -274,16 +291,19 @@ void sortArrays(int* temp_arr, int* hum_arr, double* dew_arr, int sortOption)
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: insertionSort
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int *primaryArr - primary key array used to control the sort order.
+*    2. int *secondaryArr - secondary key array for tie-breaking on ties.
+*    3. double *tertiaryArr - third array kept in parallel with the sort.
 *
 *  Function Description:
+*    Performs an insertion sort on three parallel arrays, using the primary
+*    array as the main sort key and the secondary array to break ties when
+*    primary values are equal. All three arrays are rearranged consistently.
 *
 ******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
 void insertionSort(int* primaryArr, int* secondaryArr, double* tertiaryArr)
@@ -320,16 +340,19 @@ void insertionSort(int* primaryArr, int* secondaryArr, double* tertiaryArr)
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: insertionSort2
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. double *primaryArr - primary key array (dew point) for sorting.
+*    2. int *secondaryArr  - secondary key array (e.g., humidity) for ties.
+*    3. int *tertiaryArr   - third integer array kept in parallel order.
 *
 *  Function Description:
+*    Performs an insertion sort on three parallel arrays where the primary
+*    key is a double array (dew point). Uses the secondary integer array to
+*    break ties when primary values are equal, maintaining all arrays in sync.
 *
 ******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
 void insertionSort2(double* primaryArr, int* secondaryArr, int* tertiaryArr)
@@ -366,16 +389,20 @@ void insertionSort2(double* primaryArr, int* secondaryArr, int* tertiaryArr)
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: printResults
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int mindex, int maxdex - inclusive index range to be printed.
+*    2. int sortOption - indicates which sort option was applied to the data.
+*    3. int *temp_arr, int *hum_arr, double *dew_arr - parallel arrays of
+*       temperature, humidity, and dew point values to display.
 *
 *  Function Description:
+*    Prints a title line based on the selected sort option, column headers,
+*    and then the rows of data between the specified minimum and maximum
+*    indices by calling printLine for each row. Ends with a separator line.
 *
 ******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
 void printResults(int mindex, int maxdex, int sortOption, int* temp_arr, int* hum_arr, double* dew_arr)
@@ -409,16 +436,19 @@ void printResults(int mindex, int maxdex, int sortOption, int* temp_arr, int* hu
 *
 *  Function Information
 *
-*  Name of Function:
+*  Name of Function: printLine
 *
-*  Function Return Type:
+*  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1.
-*    2.
-*    3.
+*    1. int index - index of the data to print from the parallel arrays.
+*    2. int *temp_arr - array containing temperature values (F).
+*    3. int *hum_arr, double *dew_arr - arrays containing humidity (%) and
+*       dew point (F) values corresponding to the given index.
 *
 *  Function Description:
+*    Prints a single formatted line of output showing the index, temperature,
+*    humidity, and dew point for one entry of the parallel arrays.
 *
 ******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
 void printLine(int index, int* temp_arr, int* hum_arr, double* dew_arr)
