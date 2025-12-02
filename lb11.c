@@ -7,7 +7,7 @@
 #define FIVE 5.0
 #define NINE 9.0
 #define THIRTYTWO 32.0
-#define ONEHUNDRED 100
+#define ONEHUNDRED 100.0
 
 /*****+**--***-****-****-*--*-*--**--**-*---*-***--*************************
 *
@@ -28,11 +28,12 @@
 int getSeed(void);
 int getSortOption(void);
 void getIndices(int* mindex, int* maxdex);
-void makeArray(int* temp_arr, int* hum_arr, int* dew_arr, int seed);
-void sortArrays(int* temp_arr, int* hum_arr, int* dew_arr, int sortOption);
-void insertionSort(int* primaryArr, int* secondaryArr, int* tertiaryArr);
-void printResults(int mindex, int maxdex, int* temp_arr, int* hum_arr, int* dew_arr);
-void printLine(int index, int* temp_arr, int* hum_arr, int* dew_arr);
+void makeArray(int* temp_arr, int* hum_arr, double* dew_arr, int seed);
+void sortArrays(int* temp_arr, int* hum_arr, double* dew_arr, int sortOption);
+void insertionSort(int* primaryArr, int* secondaryArr, double* tertiaryArr);
+void insertionSort2(double* primaryArr, int* secondaryArr, int* tertiaryArr);
+void printResults(int mindex, int maxdex, int* temp_arr, int* hum_arr, double* dew_arr);
+void printLine(int index, int* temp_arr, int* hum_arr, double* dew_arr);
 
 
 
@@ -45,7 +46,7 @@ int main()
     int maxdex; //the maximum index to display (inclusive)
     int temp_arr[SIZE]; // the array containing the temperature values
     int hum_arr[SIZE]; // the array containing the humidity values
-    int dew_arr[SIZE]; //the array containing the dew point values
+    double dew_arr[SIZE]; //the array containing the dew point values
 
     //Execution
     seed = getSeed();
@@ -54,6 +55,7 @@ int main()
     makeArray(temp_arr,hum_arr,dew_arr, seed);
     sortArrays(temp_arr, hum_arr, dew_arr, sortOption);
     printResults(mindex,maxdex,temp_arr,hum_arr,dew_arr);
+    return 0;
 
 }
 
@@ -82,11 +84,11 @@ int getSortOption(void)
     {
         printf("Sort the data by (1) temperature, (2) humidity, (3) dew point -> ");
         scanf("%d",&option);
-        if (option < 0 || option > 3)
+        if (option <= 0 || option > 3)
         {
             printf("\nError! Invalid choice.\n\n");
         }
-    } while (option < 0 || option > 3);
+    } while (option <= 0 || option > 3);
     return option;
 }
 
@@ -138,13 +140,13 @@ void getIndices(int* mindex, int* maxdex)
     *maxdex = temp_maxdex;
 }
 
-void makeArray(int* temp_arr, int* hum_arr, int* dew_arr, int seed)
+void makeArray(int* temp_arr, int* hum_arr, double* dew_arr, int seed)
 {
     int i; // indexing variable in the array
-    int rand_temp; //generated random temperature
-    int rand_temp_cels; // calculated random temperature in celcius
+    int rand_temp; //generated random temperatur
     int rand_hum; //generated random humidity
-    int rand_dew; //calculated dew value
+    double rand_temp_cels; // calculated random temperature in celcius
+    double rand_dew; //calculated dew value
 
     srand(seed);
 
@@ -153,15 +155,15 @@ void makeArray(int* temp_arr, int* hum_arr, int* dew_arr, int seed)
         rand_temp = (rand() % (MAXVALUE - MINVALUE + 1)) + MINVALUE;
         rand_hum = (rand() % (MAXVALUE - MINVALUE + 1)) + MINVALUE;
         rand_temp_cels = (FIVE * (rand_temp - THIRTYTWO)) / NINE;
-        rand_dew = rand_temp_cels - (ONEHUNDRED - rand_hum) / FIVE;
+        rand_dew = rand_temp_cels - ((ONEHUNDRED - rand_hum) / FIVE);
+        rand_dew = (rand_dew * (NINE/FIVE)) + THIRTYTWO;
         temp_arr[i] = rand_temp;
         hum_arr[i] = rand_hum;
         dew_arr[i] = rand_dew;
     }
 }
-void sortArrays(int* temp_arr, int* hum_arr, int* dew_arr, int sortOption)
+void sortArrays(int* temp_arr, int* hum_arr, double* dew_arr, int sortOption)
 {
-    int arr[SIZE]; // chosen array to sort (leads the sort)
     switch (sortOption)
     {
         case 1:
@@ -171,16 +173,43 @@ void sortArrays(int* temp_arr, int* hum_arr, int* dew_arr, int sortOption)
             insertionSort(hum_arr,temp_arr,dew_arr);
             break;
         case 3:
-            insertionSort(dew_arr,hum_arr,temp_arr);
+            insertionSort2(dew_arr,hum_arr,temp_arr);
             break;
     }
 }
 
-void insertionSort(int* primaryArr, int* secondaryArr, int* tertiaryArr)
+void insertionSort(int* primaryArr, int* secondaryArr, double* tertiaryArr)
 {
     int i; // outer index
     int j; //traversal for insertion index
     int key; //the value being looked at
+    int fakeKey1; //the value to be moved in the secondary array
+    double fakeKey2; // the value to be moved in the tertiary array
+
+    for(i=1; i < SIZE; i++)
+    {
+        key = primaryArr[i];
+        fakeKey1 = secondaryArr[i];
+        fakeKey2 = tertiaryArr[i];
+        j=i-1;
+        while(j >= 0 && primaryArr[j] > key)
+        {
+            primaryArr[j+1] = primaryArr[j];
+            secondaryArr[j+1] = secondaryArr[j];
+            tertiaryArr[j+1] = tertiaryArr[j];
+            j--;
+        }
+        j++;
+        primaryArr[j] = key;
+        secondaryArr[j] = fakeKey1;
+        tertiaryArr[j] = fakeKey2;
+    }
+}
+void insertionSort2(double* primaryArr, int* secondaryArr, int* tertiaryArr)
+{
+    int i; // outer index
+    int j; //traversal for insertion index
+    double key; //the value being looked at
     int fakeKey1; //the value to be moved in the secondary array
     int fakeKey2; // the value to be moved in the tertiary array
 
@@ -204,22 +233,22 @@ void insertionSort(int* primaryArr, int* secondaryArr, int* tertiaryArr)
     }
 }
 
-void printResults(int mindex, int maxdex, int* temp_arr, int* hum_arr, int* dew_arr)
+void printResults(int mindex, int maxdex, int* temp_arr, int* hum_arr, double* dew_arr)
 {
     int i; //index for printing
 
     printf("\n -=-=- Temperature Tracker Results -=-=-=-\n");
-    printf("\n -=-=- Temperature Tracker Results -=-=-=-\n");
+    printf("\n Temp (F) | Humidity (%%) | Dew Point (F)\n");
     printf(" ---------------------------------------\n");
 
-    for (i = 0; i < maxdex-mindex;i++)
+    for (i = 0; i < maxdex-mindex+1;i++)
     {
         printLine(mindex + i,temp_arr,hum_arr,dew_arr);
     }
     printf(" ---------------------------------------");
 }
 
-void printLine(int index, int* temp_arr, int* hum_arr, int* dew_arr)
+void printLine(int index, int* temp_arr, int* hum_arr, double* dew_arr)
 {
-    printf("%3d: %4d    |%8d      |%8.1f      ",index,temp_arr[index],hum_arr[index],dew_arr[index]);
+    printf("%3d: %4d    |%8d      |%8.1f      \n",index,temp_arr[index],hum_arr[index],dew_arr[index]);
 }
