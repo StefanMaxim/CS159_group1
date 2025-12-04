@@ -1,28 +1,45 @@
-/*****+*--*-*--*----***-***----*-*--**----*-*-***--*************************
- *
- *  Lab #: 10
- *
- *  Academic Integrity Statement:
- *
- *  We have not used source code obtained from any other unauthorized source,
- *  either modified or unmodified. Neither have we provided access to our code
- *  to another. The effort we are submitting is our own original work. We have 
- *  not made use of any AI generated code in this solution. 
- *
- *  Program Description: This program will simulate a beginner game of blackjack. It will be a player against a simulated dealer. Each player will start with 100 credits and can choose the amount they bet each round. The number of rounds will be determines randomly by the program. 
- *
- ******+*--*-*--*----***-***----*-*--**----*-*-***--************************/
+/*****+**--***-****-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Lab #: 12
+*
+*  Academic Integrity Statement:
+*
+*  We have not used source code obtained from any other unauthorized source,
+*  either modified or unmodified. Neither have we provided access to our code
+*  to another. The effort we are submitting is our own original work. We have
+*  not made use of any AI generated code in this solution.
+*
+*  Program Description:
+*    Generates a data set of random integers, removes all occurrences of a
+*    user-specified digit from each value, and then examines symmetric pairs
+*    of the resulting array elements. For each non-zero pair, it uses a
+*    subtraction-based Euclidean algorithm to count the number of steps
+*    required to reach the GCD. The program reports the pair requiring the
+*    fewest subtractions and the pair requiring the most, using the sums of
+*    the paired values to break ties.
+*
+*****+**--***-****-****-*--*-*--**--**-*---*-***--************************/
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
-#define SIZE        100     /* fixed size for the array              */
 #define RANDOM_MIN  0       /* minimum random value                  */
 #define RANDOM_MAX  100000  /* maximum random value (inclusive)      */
+#define TRUE 1
+#define FALSE 0
+
+int getSize(void);
 
 int getSeed(void);
 
-void makeArr(int seed, int array[]);
+int getDigit(void);
+
+int* makeArr(int seed, int size);
+
+void removeDigits(int digit,int size,int arr[]);
+
+int removeDigit(int digit,int number);
 
 int getGCD(int element1, int element2);
 
@@ -34,28 +51,33 @@ void sumNums(int arrMinElement1, int arrMinElement2, int arrMaxElement1, int arr
 
 void printResults(int minSub, int minElement1, int minElement2, int minSums, int maxSub, int maxElement1, int maxElement2, int maxSums);
 
-void findMinMaxPairs(int array[], int* minSub, int* minElement1, int* minElement2, int* minSums, int* maxSub, int* maxElement1, int* maxElement2, int* maxSums);
+void findMinMaxPairs(int array[], int size, int* minSub, int* minElement1, int* minElement2, int* minSums, int* maxSub, int* maxElement1, int* maxElement2, int* maxSums);
 
 int main(void)
 {
   // LOCAL DECLARATIONS
-  int seed;           // the seed for the random number generator           
-  int arr[SIZE];      // the array which will be filled                     
-  int minSub;         // fewest number of subtractions to arrive at the GCD 
-  int minElement1;    // index of first element which gave the fewest subs  
-  int minElement2;    // index of second element which gave the fewest subs 
-  int maxSub;         // maximum number of subtractions to find GCD         
-  int maxElement1;    // index of first element which gave the most subs    
-  int maxElement2;    // index of second element which gave the most subs   
-  int minSums;        // sum of values for the minimum pair (with tie rule) 
-  int maxSums;        // sum of values for the maximum pair (with tie rule) 
+  int seed; // the seed for the random number generator
+  int size; //the size of the array
+  int digit; //the digit in the array to remove
+  int* arr; // pointer to the first element of the array which will be filled                     
+  int minSub; // fewest number of subtractions to arrive at the GCD 
+  int minElement1; // index of first element which gave the fewest subs  
+  int minElement2; // index of second element which gave the fewest subs 
+  int maxSub; // maximum number of subtractions to find GCD         
+  int maxElement1; // index of first element which gave the most subs    
+  int maxElement2; // index of second element which gave the most subs   
+  int minSums; // sum of values for the minimum pair (with tie rule) 
+  int maxSums; // sum of values for the maximum pair (with tie rule) 
 
   // EXECUTABLE STATEMENTS
-  seed = getSeed();                           // get validated seed value
-  makeArr(seed, arr);                         // fill array with random values
+  size = getSize();
+  digit = getDigit();
+  seed = getSeed();
+  arr = makeArr(seed, size);
+  removeDigits(digit, size, arr);
 
   // find pairs with minimum and maximum subtraction counts (with tie rules)
-  findMinMaxPairs(arr, &minSub, &minElement1, &minElement2, &minSums, &maxSub, &maxElement1, &maxElement2, &maxSums);
+  findMinMaxPairs(arr, size, &minSub, &minElement1, &minElement2, &minSums, &maxSub, &maxElement1, &maxElement2, &maxSums);
 
   // display final results
   printResults(minSub, minElement1, minElement2, minSums, maxSub, maxElement1, maxElement2, maxSums);
@@ -64,6 +86,89 @@ int main(void)
 }
 
 // FUNCTION DEFINITIONS
+
+/*****+**--*****-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: getSize
+*
+*  Function Return Type: int
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. N/A - this function does not take any parameters.
+*    2.
+*    3.
+*
+*  Function Description:
+*    Prompts the user to enter the desired data set size and validates that
+*    the value is at least 2. Re-prompts on invalid input and returns the
+*    validated size to the caller.
+*
+******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
+int getSize(void)
+{
+  int valid; //status of the function
+  int size; //temporary size variable
+
+  do
+  {
+    printf("Enter desired data set size -> ");
+    scanf("%d",&size);
+    if (size < 2)
+    {
+      printf("\nError! Size must be at least two!\n\n");
+      valid = FALSE;
+    }
+    else
+    {
+      valid = TRUE;
+    }
+  } while (!valid);
+  return size;
+}
+
+/*****+**--*****-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: getDigit
+*
+*  Function Return Type: int
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. N/A - this function does not take any parameters.
+*    2.
+*    3.
+*
+*  Function Description:
+*    Prompts the user to enter a single decimal digit to be removed from all
+*    numbers in the data set. Validates that the value is between 0 and 9,
+*    inclusive, re-prompts on invalid input, and returns the validated digit.
+*
+******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
+int getDigit(void)
+{
+  int digit; //temp value of the digit
+  int valid; //status of the function
+  do
+  {
+    printf("Enter digit to remove from data -> ");
+    scanf("%d",&digit);
+    if (digit > 9 || digit < 0)
+    {
+      printf("\nError! Value must be a single non-negative digit!\n\n");
+      valid = FALSE;
+    }
+    else
+    {
+      valid = TRUE;
+    }
+    
+  } while (!valid);
+  return digit;
+  
+}
 
 /*****+*-*****-**-**----*-**-----**--*----*-*-***--*************************
 *
@@ -106,31 +211,104 @@ int getSeed(void)
 *
 *  Name of Function: makeArr
 *
-*  Function Return Type: void
+*  Function Return Type: int*
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1. int seed     - seed value used to initialize the random number
-*                      generator.
-*    2. int array[]  - integer array of size SIZE to be filled with random
-*                      values.
+*    1. int seed - seed value used to initialize the random number
+*                  generator.
+*    2. int size - number of elements to allocate and fill in the array.
 *
 *  Function Description:
-*    Initializes the random number generator with the provided seed and
-*    fills the given array with SIZE random integers in the range
-*    RANDOM_MIN to RANDOM_MAX (inclusive).
+*    Dynamically allocates an integer array of length size, initializes the
+*    random number generator with the provided seed, and fills each element
+*    with a random integer in the range RANDOM_MIN to RANDOM_MAX (inclusive).
+*    Returns a pointer to the newly allocated and initialized array.
 *
 ******+*-*****-**-**----*-**-----**--*----*-*-***--************************/
-void makeArr(int seed, int array[])
+int* makeArr(int seed, int size)
 {
-  int i;  // loop counter 
+  int i;  // loop counter
+  int* array; //pointer to the array created via malloc
 
+  array = (int *) malloc(size * sizeof(int));
   srand(seed);  // seed the random number generator
 
-  for (i = 0; i < SIZE; i++)
+  for (i = 0; i < size; i++)
   {
     // RANDOM_MIN is 0, so we only need to ensure the upper bound
     array[i] = rand() % (RANDOM_MAX + 1);
   }
+  return array;
+}
+
+/*****+**--*****-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: removeDigits
+*
+*  Function Return Type: void
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. int digit - digit to be removed from each integer in the array.
+*    2. int size  - number of elements in the array.
+*    3. int arr[] - array of integers to be processed in place.
+*
+*  Function Description:
+*    Iterates through the array of length size and replaces each element
+*    with the result of calling removeDigit on that value. All occurrences
+*    of the specified digit are removed from every array element.
+*
+******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
+void removeDigits(int digit,int size,int arr[])
+{
+  int i; //loop variable
+
+  for (i = 0;i < size; i++)
+  {
+    arr[i] = removeDigit(digit,arr[i]);
+  }
+}
+/*****+**--*****-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: removeDigit
+*
+*  Function Return Type: int
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. int digit  - digit to be removed from the given number.
+*    2. int number - original integer from which digit occurrences are
+*                    removed.
+*    3.
+*
+*  Function Description:
+*    Constructs and returns a new integer formed by removing all digits
+*    equal to digit from number. The remaining digits keep their original
+*    relative order, and no leading zeros are preserved beyond what the
+*    resulting value naturally has.
+*
+******+**--*****-**-****-*--*-*--**--**-*---*-***--************************/
+int removeDigit(int digit,int number)
+{
+  int removed; // the removed integer
+  int temp_num; //the temporary digit in the number
+  int i; //looping variable
+
+  removed = 0;
+  i = 0;
+  while (number > 0)
+  {
+    temp_num = number % 10;
+    if (temp_num != digit)
+    {
+      removed += temp_num * pow(10,i);
+      i++;
+    }
+    number /= 10;
+  }
+  return removed;
 }
 
 /*****+*-*****-**-**----*-**-----**--*----*-*-***--*************************
@@ -311,7 +489,7 @@ void printResults(int minSub, int minElement1, int minElement2, int minSums, int
 *  Function Return Type: void
 *
 *  Parameters (list data type, name, and comment one per line):
-*    1. int array[]      - array of SIZE integers to be processed.
+*    1. int array[]      - array of size integers to be processed.
 *    2. int* minSub      - pointer to store minimum subtraction count.
 *    3. int* minElement1 - pointer to store index of first element in
 *                          minimum pair.
@@ -327,7 +505,7 @@ void printResults(int minSub, int minElement1, int minElement2, int minSums, int
 *
 *  Function Description:
 *    Forms symmetric pairs of elements from the array, starting with
-*    (0, SIZE-1), (1, SIZE-2), ..., (SIZE/2 - 1, SIZE/2). For each pair
+*    (0, size-1), (1, size-2), ..., (size/2 - 1, size/2). For each pair
 *    where neither value is zero, calls getGCD to determine the number of
 *    subtractions needed to reach the GCD. Tracks the pair that uses the
 *    fewest subtractions and the pair that uses the most, using sum-based
@@ -335,7 +513,7 @@ void printResults(int minSub, int minElement1, int minElement2, int minSums, int
 *    index and sum variables through the pointer parameters.
 *
 ******+*-*****-**-**----*-**-----**--*----*-*-***--************************/
-void findMinMaxPairs(int array[], int* minSub, int* minElement1, int* minElement2, int* minSums, int* maxSub, int* maxElement1, int* maxElement2, int* maxSums)
+void findMinMaxPairs(int array[], int size, int* minSub, int* minElement1, int* minElement2, int* minSums, int* maxSub, int* maxElement1, int* maxElement2, int* maxSums)
 {
   int element1;    // index of first element in current pair
   int element2;    // index of second element in current pair
@@ -347,7 +525,7 @@ void findMinMaxPairs(int array[], int* minSub, int* minElement1, int* minElement
 
   // Form pairs: (0,99), (1,98), ..., (49,50)
   element1 = 0;
-  for (element2 = SIZE - 1; element1 < element2; element2--)
+  for (element2 = size - 1; element1 < element2; element2--)
   {
     // only process pairs where both values are non-zero
     if (array[element1] != 0 && array[element2] != 0)

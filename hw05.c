@@ -21,12 +21,19 @@
 
 //Global Declarations
 void input(int* seedValue, int* numValues, int* min, int* max);
+
 void output(int mostOnes, int fewestOnes, int numWithMostOnes, int numWithFewestOnes, int numEvenOnes, int numOddOnes);
+
 void calculateStatistics(int seedValue, int numValues, int min, int max, int* numWithMostOnes, int* numWithFewestOnes, int* mostOnes, int* fewestOnes, int* numEvenOnes, int* numOddOnes);
+
 int generateNum(int min, int max); //need to check bounds here
+
 int convertToBinary(int num);
+
 void generateStatistics(int number, int binaryNum, int* numWithMostOnes, int* numWithFewestOnes, int* mostOnes, int* fewestOnes, int* numEvenOnes, int* numOddOnes);
+
 void updateStatistics(int number, int binaryNum, int* numWithMostOnes, int* numWithFewestOnes, int* mostOnes,int* fewestOnes, int* numEvenOnes, int* numOddOnes);
+
 int countOnes(int binaryNum);
 
 int main()
@@ -85,6 +92,7 @@ void calculateStatistics(int seedValue, int numValues, int min, int max, int* nu
   for (i = 0; i < numValues; i++)
   {
     number = generateNum(min,max);
+
     binaryNum = convertToBinary(number);
     if (i == 0)
     {
@@ -147,13 +155,15 @@ int convertToBinary(int num)
 
   place = 1;
   binaryNum = 0;
+
   while (num > 0)
   {
-    digit = num%2;
+    digit = num % 2;
     binaryNum += digit * place;
     place *= 10;
     num /= 2;
   }
+
   return binaryNum;
 }
 
@@ -188,8 +198,10 @@ void generateStatistics(int number, int binaryNum, int* numWithMostOnes, int* nu
   numOnes = countOnes(binaryNum); 
   *numWithMostOnes = number;
   *numWithFewestOnes = number;
+
   *mostOnes = numOnes;
   *fewestOnes = numOnes;
+
   if (numOnes % 2 == 0)
   {
     *numEvenOnes = 1;
@@ -272,16 +284,19 @@ void updateStatistics(int number, int binaryNum, int* numWithMostOnes, int* numW
 int countOnes(int binaryNum)
 {
   int numOnes; //the number of ones
+
   int digit; //the digit in the binary number
 
   numOnes = 0;
   while (binaryNum > 0)
   {
     digit = binaryNum % 10;
+
     if (digit == 1)
     {
       numOnes++;
     }
+
     binaryNum /= 10;
   }
   return numOnes;
@@ -310,14 +325,18 @@ int countOnes(int binaryNum)
 void input(int* seedValue, int* numValues, int* min, int* max)
 {
   int tempSeed; //the temporary seed value
+
   int tempNumValues; //the temporary number of values
+
   int tempMin; //the temporary min value
+
   int tempMax; //the temporary max value
 
   do
   {
     printf("Please enter a non-negative seed value -> ");
     scanf("%d",&tempSeed);
+
     if(tempSeed < 0)
     {
       printf("\nError! Seed value must be non-negative.\n\n");
@@ -328,6 +347,7 @@ void input(int* seedValue, int* numValues, int* min, int* max)
   {
     printf("Enter number of values between 10 and 100 inclusive to generate -> ");
     scanf("%d", &tempNumValues);
+
     if (tempNumValues < 10 || tempNumValues > 100)
     {
       printf("\nError! The number of values must be between 10 and 100 inclusive.\n\n");
@@ -338,6 +358,7 @@ void input(int* seedValue, int* numValues, int* min, int* max)
   {
     printf("Enter minimum random value between 0 and 999 inclusive -> ");
     scanf("%d",&tempMin);
+
     if (tempMin < 0 || tempMin > 999)
     {
       printf("\nError! The minimum must be between 0 and 999 inclusive.\n\n");
@@ -348,6 +369,7 @@ void input(int* seedValue, int* numValues, int* min, int* max)
   {
     printf("Enter maximum random value between %d exclusive and 999 inclusive -> ",tempMin);
     scanf("%d",&tempMax);
+
     if (tempMax <= tempMin || tempMax > 999)
     {
       printf("\nError! The maximum must be between %d exclusive and 999 inclusive.\n\n",tempMin);
@@ -385,32 +407,16 @@ void input(int* seedValue, int* numValues, int* min, int* max)
 void output(int mostOnes, int fewestOnes, int numWithMostOnes, int numWithFewestOnes, int numEvenOnes, int numOddOnes)
 {
   printf("\n");
+
   printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+
   printf("Number with most 1s (%d): %d\n",mostOnes,numWithMostOnes);
+
   printf("Number with fewest 1s (%d): %d\n",fewestOnes,numWithFewestOnes);
+
   printf("Numbers with even number of 1s: %d\n",numEvenOnes);
+
   printf("Numbers with odd number of 1s: %d\n",numOddOnes);
+  
   printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
