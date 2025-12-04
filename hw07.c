@@ -44,13 +44,14 @@ int main()
   int seed; // the seed for array generation
   int digit; //the digit to remove
   int arr[SIZE]; //the array where the numbers are stored
-  double beforeStats[SIZE_STATS]; //array containing the statistics for the first, unaltered array
-  double afterStats[SIZE_STATS];
 
+  double beforeStats[SIZE_STATS]; //array containing the statistics for the first, unaltered array
+  double afterStats[SIZE_STATS]; //array containing the statistics for the second, altered array
 
   //Execution
   seed = getSeed();
   digit = getDigit();
+
   makeArr(seed, arr);
   sortArr(arr);
   makeStatistics(arr,beforeStats);
@@ -90,12 +91,14 @@ int getSeed(void)
     printf("Enter desired seed value -> ");
     scanf("%d",&seed);
     done = 1;
+
     if (seed < 0)
     {
       printf("\nError! Non-negative seed values only!!\n\n");
       done = 0;
     }
   } while (!done);
+
   return seed;
 }
 
@@ -127,12 +130,14 @@ int getDigit(void)
     printf("Enter desired digit to remove -> ");
     scanf("%d",&digit);
     done = 1;
+
     if (digit < 0 || digit > 9)
     {
       printf("\nError! Digit must be from 0 to 9.\n\n");
       done = 0;
     }
   } while (!done);
+
   return digit;
 }
 
@@ -160,6 +165,7 @@ void makeArr(int seed, int arr[])
   int i; //index for looping
 
   srand(seed);
+
   for (i = 0; i < SIZE; i++)
   {
     arr[i] = rand() % (MAX - MIN + 1) + MIN;
@@ -194,6 +200,7 @@ void sortArr(int arr[])
   {
     key = arr[i];
     j = i - 1;
+
     while (j >= 0 && arr[j] > key)
     {
       arr[j + 1] = arr[j];
@@ -287,6 +294,7 @@ void makeStatistics(int arr[], double statArr[])
 void removeDigits(int arr[], int digit)
 {
   int i; //index in the array
+
   for (i = 0; i < SIZE; i++)
   {
     arr[i] = removeDigit(arr[i],digit);
@@ -320,6 +328,7 @@ int removeDigit(int num, int digit)
 
   order = 0;
   numCopy = num;
+
   while (numCopy > 0)
   {
     temp = numCopy % 10;
@@ -330,6 +339,7 @@ int removeDigit(int num, int digit)
     order++;
     numCopy /= 10;
   }
+  
   return num;
 }
 
@@ -362,6 +372,6 @@ void printResults(double beforeStats[],double afterStats[])
   printf("750 - 999: %5d  |%5d   \n",(int)beforeStats[3],(int)afterStats[3]);
   printf("Maximum:   %5d  |%5d   \n",(int)beforeStats[4],(int)afterStats[4]);
   printf("Minimum:   %5d  |%5d   \n",(int)beforeStats[5],(int)afterStats[5]);
-  printf("Median:    %4.1f  |%5.1f   \n",beforeStats[6],afterStats[6]);
-  printf("Average:   %4.1f  |%5.1f   \n",beforeStats[7],afterStats[7]);
+  printf("Median:     %5.1f | %5.1f   \n",beforeStats[6],afterStats[6]);
+  printf("Average:    %5.1f | %5.1f   \n",beforeStats[7],afterStats[7]);
 }
