@@ -10,7 +10,10 @@
 *  made use of any AI generated code in this solution. 
 *
 *  Program Description:
-*
+*  This program generates an array of random integers, computes statistics
+*  on the original array, removes all occurrences of a user-specified digit
+*  from every number, recomputes the statistics, and prints both sets of
+*  results in a formatted table for comparison.
 ******+*--****-*-**-****-*--*-*--**--**-*---*-***--************************/
 
 #include<stdio.h>
@@ -59,6 +62,24 @@ int main()
   return 0;
 }
 
+/*****+**-**-*-*-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: getSeed
+*
+*  Function Return Type: int
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. N/A
+*    2.
+*    3.
+*
+*  Function Description:
+*    Prompts the user to enter a non-negative integer seed value, validates
+*    the input, and returns the accepted seed.
+*
+******+**-**-*-*-**-****-*--*-*--**--**-*---*-***--************************/
 int getSeed(void)
 {
   int seed; //temp seed varible for user
@@ -78,6 +99,24 @@ int getSeed(void)
   return seed;
 }
 
+/*****+**-**-*-*-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: getDigit
+*
+*  Function Return Type: int
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. N/A
+*    2.
+*    3.
+*
+*  Function Description:
+*    Prompts the user to enter a single digit from 0 to 9, validates the
+*    input, and returns the accepted digit to be removed from the numbers.
+*
+******+**-**-*-*-**-****-*--*-*--**--**-*---*-***--************************/
 int getDigit(void)
 {
   int digit; //temp variable for the digit
@@ -97,6 +136,25 @@ int getDigit(void)
   return digit;
 }
 
+/*****+**-**-*-*-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: makeArr
+*
+*  Function Return Type: void
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. int seed  // random seed used to initialize the generator
+*    2. int arr[] // array to be filled with random integers
+*    3.
+*
+*  Function Description:
+*    Seeds the random number generator with the given seed and fills the
+*    array with SIZE random integers uniformly distributed between MIN and
+*    MAX inclusive.
+*
+******+**-**-*-*-**-****-*--*-*--**--**-*---*-***--************************/
 void makeArr(int seed, int arr[])
 {
   int i; //index for looping
@@ -108,6 +166,24 @@ void makeArr(int seed, int arr[])
   }
 }
 
+/*****+**-**-*-*-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: sortArr
+*
+*  Function Return Type: void
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. int arr[] // array of integers to be sorted in ascending order
+*    2.
+*    3.
+*
+*  Function Description:
+*    Sorts the array of SIZE integers in ascending order using the
+*    insertion sort algorithm.
+*
+******+**-**-*-*-**-****-*--*-*--**--**-*---*-***--************************/
 void sortArr(int arr[])
 {
   int i; //indexing value
@@ -127,6 +203,25 @@ void sortArr(int arr[])
   }
 }
 
+/*****+**-**-*-*-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: makeStatistics
+*
+*  Function Return Type: void
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. int arr[]        // sorted data array used to compute statistics
+*    2. double statArr[] // array to store computed statistics
+*    3.
+*
+*  Function Description:
+*    Computes statistics for the given data array, including the counts of
+*    values in four ranges, the maximum, minimum, median, and average, and
+*    stores these values in the statistics array.
+*
+******+**-**-*-*-**-****-*--*-*--**--**-*---*-***--************************/
 void makeStatistics(int arr[], double statArr[])
 {
   int i; //index for array
@@ -171,6 +266,24 @@ void makeStatistics(int arr[], double statArr[])
   statArr[7] /= SIZE;
 }
 
+/*****+**-**-*-*-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: removeDigits
+*
+*  Function Return Type: void
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. int arr[] // array of integers whose digits will be removed
+*    2. int digit // digit value (0–9) to remove from each array element
+*    3.
+*
+*  Function Description:
+*    Iterates through the array and replaces each element with the result
+*    of removing all occurrences of the specified digit from that number.
+*
+******+**-**-*-*-**-****-*--*-*--**--**-*---*-***--************************/
 void removeDigits(int arr[], int digit)
 {
   int i; //index in the array
@@ -180,6 +293,25 @@ void removeDigits(int arr[], int digit)
   }
 }
 
+/*****+**-**-*-*-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: removeDigit
+*
+*  Function Return Type: int
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. int num   // original integer from which a digit will be removed
+*    2. int digit // digit value (0–9) to remove from the given number
+*    3.
+*
+*  Function Description:
+*    Scans through the decimal digits of the given number and subtracts
+*    the place value of any digit that matches the specified digit, using
+*    powers of ten, then returns the modified integer.
+*
+******+**-**-*-*-**-****-*--*-*--**--**-*---*-***--************************/
 int removeDigit(int num, int digit)
 {
   int numCopy; //copy of the number for division purposes
@@ -201,6 +333,25 @@ int removeDigit(int num, int digit)
   return num;
 }
 
+/*****+**-**-*-*-**-****-*--*-*--**--**-*---*-***--*************************
+*
+*  Function Information
+*
+*  Name of Function: printResults
+*
+*  Function Return Type: void
+*
+*  Parameters (list data type, name, and comment one per line):
+*    1. double beforeStats[] // statistics for the original array
+*    2. double afterStats[]  // statistics for the digit-modified array
+*    3.
+*
+*  Function Description:
+*    Prints a formatted table showing category counts, maximum, minimum,
+*    median, and average for both the original and modified data sets so
+*    they can be easily compared.
+*
+******+**-**-*-*-**-****-*--*-*--**--**-*---*-***--************************/
 void printResults(double beforeStats[],double afterStats[])
 {
   printf("\nCategory | Before | After\n");
